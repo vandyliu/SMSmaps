@@ -15,7 +15,7 @@ app = Flask(__name__)
 def hello():
     return "hello world"
 
-@app.route("/instructions/")
+@app.route("/directions/")
 def directions():
     mode = request.args.get('mode')
     language = request.args.get('language')
