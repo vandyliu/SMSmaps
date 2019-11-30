@@ -1,11 +1,31 @@
-from flask import Flask
+from flask import Flask, request
 from dotenv import load_dotenv
+import json
 
-from maps import directions
+from maps import client
 
 load_dotenv()
+
 app = Flask(__name__)
 
 @app.route("/")
 def hello():
     return "Hello World!"
+
+@app.route("/instructions/")
+def directions():
+    mode = request.args.get('mode')
+    language = request.args.get('language')
+    arrival_time = request.args.get('arrival_time')
+    departure_time = request.args.get('departure_time')
+    origin = request.args.get('origin')
+    destination = request.args.get('destination')
+
+    res = client.directions(origin,
+                               destination,
+                               mode,
+                               language,
+                               arrival_time,
+                               departure_time)
+
+    return client.instructions(res)
