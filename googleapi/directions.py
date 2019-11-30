@@ -24,12 +24,15 @@ def directions(origin, destination, mode, language, arrival_time, departure_time
         # empty
         return "Not Found"
     else:
-        instructions=[]
+        return res
 
-        for step in res[0]["legs"][0]["steps"]:
-            instructions.append(step["html_instructions"])
-            if "steps" in step:
-                for step2 in step["steps"]:
-                    instructions.append(step2["html_instructions"])
+def instructions(res):
+    instructions=[]
 
-        return '\n'.join(instructions)
+    for step in res[0]["legs"][0]["steps"]:
+        instructions.append(step["html_instructions"])
+        if "steps" in step:
+            for step2 in step["steps"]:
+                instructions.append(step2["html_instructions"])
+
+    return '\n'.join(instructions)
