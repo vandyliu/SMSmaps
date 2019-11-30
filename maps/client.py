@@ -6,11 +6,29 @@ import requests
 
 from maps import helpers as mh
 
+import re
+
 key = os.getenv("GOOGLE_API_KEY")
 gmaps = googlemaps.Client(key=key)
 
 def directions(origin, destination, mode, language, arrival_time, departure_time):
-    # Request directions via public transit    
+    """returns raw direction object from google maps directions api
+    
+    Arguments:
+        origin {string} -- Starting Location eg. Starbucks near UBC Bookstore
+        destination {string} -- Ending Location
+        mode {string} -- method of travel, defaults to "driving"
+                         "transit" "walking" "driving" or "bicycling"
+        language {string} -- language to return in, defaults to "EN". eg. "zh-CN", "fr-CA"
+                             see https://developers.google.com/maps/faq#languagesupport
+        arrival_time {integer} -- Specifies the desired time of arrival.
+                                  Seconds since midnight, January 1, 1970 UTC
+        departure_time {integer} -- Specifies the desired time of departure.
+                                    Seconds since midnight, January 1, 1970 UTC
+    
+    Returns:
+        [dict] -- [raw directions object]
+    """    
     now = datetime.now()
     res = gmaps.directions(origin,
                            destination,
@@ -25,18 +43,40 @@ def directions(origin, destination, mode, language, arrival_time, departure_time
         # empty
         return "Not Found"
     else:
-        return res
+        return res[0]
 
-def instructions(res):
-    instructions=[]
+def parse(res):
+    """converts raw direction dict from google maps api to readible format
+    
+    Arguments:
+        res {dict} -- raw direction dict from google maps api
+    
+    Returns:
+        [dict] -- readible directions format
+    """    
+    instructions = []
+    lat = res["legs"][0]["end_location"]["lat"]
+    lng = res["legs"][0]["end_location"]["lng"]
 
-    for step in res[0]["legs"][0]["steps"]:
-        instructions.append(step["html_instructions"])
+    for step in res["legs"][0]["steps"]:
+        instruction = re.sub('<[^<]+?>', '', step["html_instructions"])
+        instructions.append(instruction)
         if "steps" in step:
             for step2 in step["steps"]:
-                instructions.append(step2["html_instructions"])
+                instruction = re.sub('<[^<]+?>', '', step2["html_instructions"])
+                instructions.append(instruction)
 
-    return '\n'.join(instructions)
+    return {
+        "instructions": instructions,
+        "travel_length": res["legs"][0]["duration"]["text"],
+        "arrival_time": res["legs"][0].get("arrival_time", {}).get("text", None),
+        "departure_time": res["legs"][0].get("departure_time", {}).get("text", None),
+        "end_address": res["legs"][0]["end_address"],
+        "start_address": res["legs"][0]["start_address"],
+        "distance": res["legs"][0]["distance"]["text"],
+        "duration": res["legs"][0]["duration"]["text"],
+        "destination_url": f'http://www.google.com/maps/place/{lat},{lng}'
+    }
 
 def map_image(res):
     """Gets URL of a google maps image that shows the route
