@@ -16,7 +16,7 @@ client.incoming_phone_numbers(main_phone_number_resource.sid).update(sms_url=sms
 def sms_reply():
     """When receiving an SMS, sends return message to caller
     Returns:
-        type -- description
+        str -- return message
     """    
     resp = MessagingResponse()
     # Add a message
