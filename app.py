@@ -2,8 +2,7 @@ from flask import Flask, request
 from dotenv import load_dotenv
 import json
 
-import googleapi.directions as googleapi
-from maps import directions
+from maps import client
 
 load_dotenv()
 
@@ -22,11 +21,11 @@ def directions():
     origin = request.args.get('origin')
     destination = request.args.get('destination')
 
-    res = googleapi.directions(origin,
+    res = client.directions(origin,
                                destination,
                                mode,
                                language,
                                arrival_time,
                                departure_time)
 
-    return googleapi.instructions(res)
+    return client.instructions(res)

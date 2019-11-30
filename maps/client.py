@@ -1,15 +1,13 @@
+import os
 import googlemaps
 from datetime import datetime
-
 import json
 
-gmaps = googlemaps.Client(key='AIzaSyB4Hh5V4zRygXTFAipMXiWRBz8_rmqNgYg')
-
-# Geocoding an address
-geocode_result = gmaps.geocode('1600 Amphitheatre Parkway, Mountain View, CA')
+key = os.getenv("GOOGLE_API_KEY")
+gmaps = googlemaps.Client(key=key)
 
 def directions(origin, destination, mode, language, arrival_time, departure_time):
-    # Request directions via public transit
+    # Request directions via public transit    
     now = datetime.now()
     res = gmaps.directions(origin,
                            destination,
