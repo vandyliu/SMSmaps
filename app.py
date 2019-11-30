@@ -9,7 +9,7 @@ app = Flask(__name__)
 def hello():
     return "Hello World!"
 
-@app.route("/directions/")
+@app.route("/instructions/")
 def directions():
     mode = request.args.get('mode')
     language = request.args.get('language')
@@ -18,9 +18,11 @@ def directions():
     origin = request.args.get('origin')
     destination = request.args.get('destination')
 
-    return googleapi.directions(origin,
-                                destination,
-                                mode,
-                                language,
-                                arrival_time,
-                                departure_time)
+    res = googleapi.directions(origin,
+                               destination,
+                               mode,
+                               language,
+                               arrival_time,
+                               departure_time)
+
+    return googleapi.instructions(res)
