@@ -6,6 +6,7 @@ from maps import client
 
 load_dotenv()
 
+from sms import sms_reply
 app = Flask(__name__)
 
 @app.route("/")
@@ -29,3 +30,9 @@ def directions():
                                departure_time)
 
     return client.instructions(res)
+@app.route("/sms", methods=['GET', 'POST'])
+def reply():
+    return sms_reply()
+
+if __name__ == "__main__":
+    app.run(debug=True)
