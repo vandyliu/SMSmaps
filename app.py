@@ -68,22 +68,8 @@ def reply():
     counter += 1
     session['counter'] = counter
 
-    callers = {
-        "+7783788024": "Friend",
-        "+6043524722": "Friend",
-        "+7788148834": "Friend",
-    }
-
-    #Get number
-    from_number = request.values.get('From')
-    to_number = request.values.get('To')
-
-    if from_number in callers:
-        name = callers[from_number]
-    else:
-        name = "Friend"
-
-    return sms_reply(name, to_number, counter)
+    text_message = request.values.get('Body')
+    return sms_reply(text_message, counter)
 
 if __name__ == "__main__":
     app.run(debug=True)

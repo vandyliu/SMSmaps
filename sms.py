@@ -19,16 +19,21 @@ main_phone_number_resource = incoming_phone_numbers[0]
 assistant = client.autopilot.assistants.create()
 
 
-def sms_reply(name, to_number, counter):
+def sms_reply(text_message, counter):
     """When receiving an SMS, returns image and number of time this number has recently called (within 4 hours)
     Returns:
         str -- xml representation of return message
     """    
     resp = MessagingResponse()
     message = Message()
-
-    message.body('{} has messaged {} {} times.'.format(name, to_number, counter))
-    message.media('https://demo.twilio.com/owl.png')
+    if counter == 0:
+        message.body('Hey, we can help you find a transit path to where you need to go.\n \
+            DM us a text with your current location and where your destination like so:\n \
+            <your location> ; <your destination>.')
+    else:
+        locations = text_message.split(";")
+        origin = locations[0]
+        dest = locations[1]
 
     resp.append(message)
     return str(resp)
