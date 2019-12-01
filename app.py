@@ -32,25 +32,25 @@ def directions():
     return client.instructions(res)
 @app.route("/sms", methods=['GET', 'POST'])
 def reply():
-    # Increment the counter
-    # counter = session.get('counter', 0)
-    # counter += 1
-    # session['counter'] = counter
+    Increment the counter
+    counter = session.get('counter', 0)
+    counter += 1
+    session['counter'] = counter
 
-    # callers = {
-    #     "+7783788024": "Friend",
-    #     "+6043524722": "Friend",
-    #     "+7788148834": "Friend",
-    # }
+    callers = {
+        "+7783788024": "Friend",
+        "+6043524722": "Friend",
+        "+7788148834": "Friend",
+    }
 
     #Get number
     from_number = request.values.get('From')
     to_number = request.values.get('To')
 
-    # if from_number in callers:
-    #     name = callers[from_number]
-    # else:
-    #     name = "Friend"
+    if from_number in callers:
+        name = callers[from_number]
+    else:
+        name = "Friend"
 
     return sms_reply('name', to_number, '2')
 
