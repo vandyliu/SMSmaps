@@ -26,14 +26,19 @@ def sms_reply(text_message, counter):
     """    
     resp = MessagingResponse()
     message = Message()
-    if counter == 0:
+    if ";" in text_message:
         message.body('Hey, we can help you find a transit path to where you need to go.\n \
             DM us a text with your current location and where your destination like so:\n \
             <your location> ; <your destination>.')
-    else:
-        locations = text_message.split(";")
-        origin = locations[0]
-        dest = locations[1]
+    locations = text_message.split(";")
+    if len(locations) != 2:
+        message.body('Hey, we can help you find a transit path to where you need to go.\n \
+            DM us a text with your current location and where your destination like so:\n \
+            <your location> ; <your destination>.')
+    origin = locations[0]
+    dest = locations[1]
+
+    
 
     resp.append(message)
     return str(resp)
