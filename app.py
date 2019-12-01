@@ -1,5 +1,6 @@
 import json
 import shutil
+import googlemaps
 
 from dotenv import load_dotenv
 from flask import Flask, request
@@ -15,7 +16,7 @@ app = Flask(__name__)
 def hello():
     return "hello world"
 
-@app.route("/directions/raw/")
+@app.route("/directions/")
 def directions_raw():
     mode = request.args.get('mode')
     language = request.args.get('language')
@@ -24,24 +25,19 @@ def directions_raw():
     origin = request.args.get('origin')
     destination = request.args.get('destination')
 
-    res = client.directions(origin,
-                            destination,
-                            mode,
-                            language,
-                            arrival_time,
-                            departure_time)
+    try:
+        res = directions(origin,
+                        destination,
+                        mode,
+                        language,
+                        arrival_time,
+                        departure_time)
+    except googlemaps.exceptions.ApiError:
+        return "ERROR"
 
     return res
 
-@app.route("/directions/")
-def directions():
-    mode = request.args.get('mode')
-    language = request.args.get('language')
-    arrival_time = request.args.get('arrival_time')
-    departure_time = request.args.get('departure_time')
-    origin = request.args.get('origin')
-    destination = request.args.get('destination')
-
+def directions(origin, destination, mode="transit", language=None, arrival_time=None, departure_time=None):
     res = client.directions(origin,
                             destination,
                             mode,
