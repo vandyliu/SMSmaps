@@ -13,32 +13,18 @@ client = Client(account_sid, auth_token)
 incoming_phone_numbers = client.incoming_phone_numbers.list(phone_number=main_phone_number, limit=5)
 main_phone_number_resource = incoming_phone_numbers[0]
 
-# client.incoming_phone_numbers(main_phone_number_resource.sid).update(sms_url=sms_url)
 
-
-assistant = client.autopilot.assistants.create()
-
-
-def sms_reply(text_message, counter):
-    """When receiving an SMS, returns image and number of time this number has recently called (within 4 hours)
-    Returns:
-        str -- xml representation of return message
-    """    
-    resp = MessagingResponse()
-    message = Message()
+def valid_text(text_message, counter):
     if ";" in text_message:
-        message.body('Hey, we can help you find a transit path to where you need to go.\n \
-            DM us a text with your current location and where your destination like so:\n \
-            <your location> ; <your destination>.')
+        return None
     locations = text_message.split(";")
     if len(locations) != 2:
-        message.body('Hey, we can help you find a transit path to where you need to go.\n \
-            DM us a text with your current location and where your destination like so:\n \
-            <your location> ; <your destination>.')
-    origin = locations[0]
-    dest = locations[1]
+        return None
+    return True
 
-    
-
+def sms_reply(string):
+    resp = MessagingResponse()
+    message = Message()
+    message.body(string)
     resp.append(message)
     return str(resp)

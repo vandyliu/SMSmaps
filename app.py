@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from flask import Flask, request, session
 
 from maps import client
-from sms import sms_reply
+from sms import sms_reply, valid_text
 
 load_dotenv()
 
@@ -63,9 +63,21 @@ def reply():
     counter = session.get('counter', 0)
     counter += 1
     session['counter'] = counter
-
     text_message = request.values.get('Body')
-    return sms_reply(text_message, counter)
+
+    output_string = 'Hey, we can help you find a transit path to where you need to go.\n \
+            DM us a text with your current location and where your destination like so:\n \
+            <your location> ; <your destination>.'
+
+    if valid_text(text_message, counter):
+        locations = text_message.split(";")
+        origin = locations[0]
+        dest = locations[1]
+        directions_string = directions(origin, dest)
+        if directions_string != "ERROR":
+            output_string = directions_string
+            
+    return sms_reply(output_string)
 
 if __name__ == "__main__":
     app.run(debug=True)
