@@ -26,7 +26,7 @@ def directions(origin, destination, mode="transit", language=None, arrival_time=
                             arrival_time,
                             departure_time)
     except googlemaps.exceptions.ApiError:
-        return {}
+        return []
     return res
 def parse_directions(res):
     try:
@@ -55,6 +55,7 @@ def reply():
     counter += 1
     session['counter'] = counter
     text_message = request.values.get('Body')
+    dest_num = request.values.get('From')
 
     output_string = (
         '\n'
@@ -70,13 +71,13 @@ def reply():
         print(origin)
         print(dest)
         res = directions(origin, dest)
-        res_l= res[0]
+        res_obj= res[0]
         url = None
-        if not res_l:
-            url = client.map_image(res_l)
+        if res and res_obj:
+            url = client.map_image(res)
         print(url)
         if url:
-            send_image(url)
+            send_image(dest_num, url)
         directions_string = parse_directions(res)
         if not directions_string:
             output_string = 'Could not determine location(s). Please try again.'

@@ -29,9 +29,13 @@ def sms_reply(string):
     resp.append(message)
     return str(resp)
 
-def send_image(url):
-    resp = MessagingResponse()
-    message = Message()
-    message.media(url)
-    resp.append(message)
-    return str(resp)
+def send_image(dest_num, url):
+    print("sendingimage")
+    # resp = MessagingResponse()
+    # message = Message()
+    # message.media(url)
+    # resp.append(message)
+    print(main_phone_number)
+    print(dest_num)
+    client.messages.create(from_=main_phone_number,to=dest_num, media_url=url)
+    return

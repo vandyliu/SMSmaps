@@ -178,5 +178,4 @@ def map_image(res):
         "key": key
     }
     img_resp = requests.get(url=MAP_URL, params=params)
-    print(img_resp.url)
     return img_resp.url
