@@ -9,7 +9,7 @@ def get_origin(res):
     Returns:
         dict -- start location dict with lat and lng fields
     """
-    location = res["routes"][0]["legs"][0]["start_location"]
+    location = res[0]["legs"][0]["start_location"]
     return location
 
 def get_destination(res):
@@ -21,7 +21,7 @@ def get_destination(res):
     Returns:
         dict -- end location dict with lat and lng fields
     """
-    location = res["routes"][0]["legs"][0]["end_location"]
+    location = res[0]["legs"][0]["end_location"]
     return location
 
 def get_polygon_path(res):
@@ -33,7 +33,7 @@ def get_polygon_path(res):
     Returns:
         string -- encoded polygon path
     """
-    return res["routes"][0]["overview_polyline"]["points"]
+    return res[0]["overview_polyline"]["points"]
 
 def get_latlon(location):
     """gets lat and lng from location dict

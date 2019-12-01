@@ -15,7 +15,7 @@ main_phone_number_resource = incoming_phone_numbers[0]
 
 
 def valid_text(text_message, counter):
-    if ";" in text_message:
+    if ";" not in text_message:
         return None
     locations = text_message.split(";")
     if len(locations) != 2:
@@ -26,5 +26,12 @@ def sms_reply(string):
     resp = MessagingResponse()
     message = Message()
     message.body(string)
+    resp.append(message)
+    return str(resp)
+
+def send_image(url):
+    resp = MessagingResponse()
+    message = Message()
+    message.media(url)
     resp.append(message)
     return str(resp)

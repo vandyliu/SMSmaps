@@ -43,7 +43,7 @@ def directions(origin, destination, mode, language, arrival_time, departure_time
         # empty
         return "Not Found"
     else:
-        return res[0]
+        return res
 
 def parse(res):
     """converts raw direction dict from google maps api to readible format
@@ -53,10 +53,11 @@ def parse(res):
     
     Returns:
         [dict] -- readible directions format
-    """    
+    """
+    res=res[0]
     steps = []
-    lat = res["legs"][0]["end_location"]["lat"]
-    lng = res["legs"][0]["end_location"]["lng"]
+    if not isinstance(res, dict):
+        return {}
 
     for step in res["legs"][0]["steps"]:
         instruction = re.sub('<[^<]+?>', '', step["html_instructions"])
@@ -101,7 +102,7 @@ def parse(res):
                 "duration": duration,
                 "instruction": instruction,
                 "substeps": substeps,
-                "travel_mode": step2["travel_mode"]
+                "travel_mode": step["travel_mode"]
             })
 
     return {
@@ -111,7 +112,6 @@ def parse(res):
         "start_address": res["legs"][0]["start_address"],
         "distance": res["legs"][0]["distance"]["text"],
         "duration": res["legs"][0]["duration"]["text"],
-        "destination_url": f'http://www.google.com/maps/place/{lat},{lng}',
         "steps": steps,
     }
 
@@ -178,4 +178,5 @@ def map_image(res):
         "key": key
     }
     img_resp = requests.get(url=MAP_URL, params=params)
+    print(img_resp.url)
     return img_resp.url
