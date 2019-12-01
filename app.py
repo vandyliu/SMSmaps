@@ -13,8 +13,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    response = client.map_image(test_res)
-    return response
+    return "hello world"
 
 @app.route("/instructions/")
 def directions():
