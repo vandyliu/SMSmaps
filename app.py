@@ -32,7 +32,6 @@ def directions():
     return client.instructions(res)
 @app.route("/sms", methods=['GET', 'POST'])
 def reply():
-    Increment the counter
     counter = session.get('counter', 0)
     counter += 1
     session['counter'] = counter
@@ -52,7 +51,7 @@ def reply():
     else:
         name = "Friend"
 
-    return sms_reply('name', to_number, '2')
+    return sms_reply(name, to_number, counter)
 
 if __name__ == "__main__":
     app.run(debug=True)
