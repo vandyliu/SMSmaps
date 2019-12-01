@@ -1,5 +1,5 @@
 import os
-from twilio.twiml.messaging_response import MessagingResponse
+from twilio.twiml.messaging_response import MessagingResponse, Body, Media, Message
 from twilio.rest import Client
 
 account_sid = os.getenv("TWILIO_ACCOUNT_SID")
@@ -16,11 +16,15 @@ client.incoming_phone_numbers(main_phone_number_resource.sid).update(sms_url=sms
 def sms_reply():
     """When receiving an SMS, sends return message to caller
     Returns:
-        str -- return message
+        str -- xml representation of return message
     """    
     resp = MessagingResponse()
-    # Add a message
-    resp.message("return message here")
+    message = Message()
+
+    message.body('picture of owl')
+    message.media('https://demo.twilio.com/owl.png')
+
+    resp.append(message)
     return str(resp)
 
 
