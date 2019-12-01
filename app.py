@@ -1,17 +1,20 @@
-from flask import Flask, request
-from dotenv import load_dotenv
 import json
+import shutil
+
+from dotenv import load_dotenv
+from flask import Flask, request
 
 from maps import client
+from sms import sms_reply
 
 load_dotenv()
 
-from sms import sms_reply
 app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return "Hello World!"
+    response = client.map_image(test_res)
+    return response
 
 @app.route("/instructions/")
 def directions():
@@ -30,6 +33,7 @@ def directions():
                                departure_time)
 
     return client.instructions(res)
+
 @app.route("/sms", methods=['GET', 'POST'])
 def reply():
     return sms_reply()
