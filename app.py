@@ -3,7 +3,7 @@ import shutil
 import googlemaps
 
 from dotenv import load_dotenv
-from flask import Flask, request
+from flask import Flask, request, session
 
 from maps import client
 from sms import sms_reply
@@ -60,7 +60,19 @@ def directions(origin, destination, mode="transit", language=None, arrival_time=
 
 @app.route("/sms", methods=['GET', 'POST'])
 def reply():
-    return sms_reply()
+    counter = session.get('counter', 0)
+    counter += 1
+    session['counter'] = counter
+
+    text_message = request.values.get('Body')
+    return sms_reply(text_message, counter)
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+SECRET_KEY = 'a secret key'
+app.config.from_object(__name__)
+
+
+    
